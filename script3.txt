@@ -1,0 +1,13 @@
+d uan://localhost:3030/ds rmsp://localhost:4040 
+f uan://localhost:3030/ds uan://localhost:3030/fs1 rmsp://localhost:4041
+f uan://localhost:3030/ds uan://localhost:3030/fs2 rmsp://localhost:4042
+c uan://localhost:3030/ds b.txt
+c uan://localhost:3030/ds a.txt
+g uan://localhost:3030/ds b.txt
+f uan://localhost:3030/ds uan://localhost:3030/fs3 rmsp://localhost:4043
+f uan://localhost:3030/ds uan://localhost:3030/fs4 rmsp://localhost:4044
+f uan://localhost:3030/ds uan://localhost:3030/fs5 rmsp://localhost:4045
+c uan://localhost:3030/ds bee_short.txt
+g uan://localhost:3030/ds bee_short.txt
+g uan://localhost:3030/ds a.txt
+q uan://localhost:3030/ds
