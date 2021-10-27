@@ -20,7 +20,6 @@ behavior DirectoryServer {
     
     int blockSize = 64;
 
-
     /* Take a file and save it to known file servers.
      *
      * To ensure this is deterministic, always save
@@ -35,12 +34,14 @@ behavior DirectoryServer {
      */
     /* You may pass and return any data you need. */
     void store(String fileName, String content) {
+        standardOutput <- println("I'm splitting up files and sending them where they need to be.")
+        @currentContinuation;
     }
 
 
     /* Given a file name, return the servers and blocks it's located on. */
     /* You may pass and return any data you need. */
-    void retrieve() {
+    void retrieve(String fileName) {
         // @currentContinuation;
     }
 

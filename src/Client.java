@@ -297,17 +297,88 @@ public class Client extends UniversalActor  {
 			}
 }			else {{
 				{
-					Token token_3_0 = new Token();
 					// standardOutput<-println(s)
 					{
 						Object _arguments[] = { s };
-						Message message = new Message( self, standardOutput, "println", _arguments, null, token_3_0 );
+						Message message = new Message( self, standardOutput, "println", _arguments, null, null );
 						__messages.add( message );
 					}
+				}
+				String[] split = s.split(" ", s.length());
+				if (s.charAt(0)=='d') {{
+					{
+						// standardOutput<-println("Create Directory Server Actor")
+						{
+							Object _arguments[] = { "Create Directory Server Actor" };
+							Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+							__messages.add( message );
+						}
+					}
+					DirectoryServer ds = ((DirectoryServer)new DirectoryServer(new UAN(split[1]), new UAL(split[2]),this).construct());
+				}
+}				else {if (s.charAt(0)=='f') {{
+					{
+						// standardOutput<-println("Create File Server Actor")
+						{
+							Object _arguments[] = { "Create File Server Actor" };
+							Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+							__messages.add( message );
+						}
+					}
+				}
+}				else {if (s.charAt(0)=='c') {{
+					{
+						// standardOutput<-println("Send file to Directory to send to File Servers")
+						{
+							Object _arguments[] = { "Send file to Directory to send to File Servers" };
+							Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+							__messages.add( message );
+						}
+					}
+					DirectoryServer ds = (DirectoryServer)DirectoryServer.getReferenceByName(new UAN(split[1]));
+					{
+						// ds<-store(split[2], inputScript.load("input/"+split[2]))
+						{
+							Object _arguments[] = { split[2], inputScript.load("input/"+split[2]) };
+							Message message = new Message( self, ds, "store", _arguments, null, null );
+							__messages.add( message );
+						}
+					}
+				}
+}				else {if (s.charAt(0)=='g') {{
+					{
+						// standardOutput<-println("Get File from Directory Server")
+						{
+							Object _arguments[] = { "Get File from Directory Server" };
+							Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+							__messages.add( message );
+						}
+					}
+					DirectoryServer ds = (DirectoryServer)DirectoryServer.getReferenceByName(new UAN(split[1]));
+					{
+						// ds<-retrieve(split[2])
+						{
+							Object _arguments[] = { split[2] };
+							Message message = new Message( self, ds, "retrieve", _arguments, null, null );
+							__messages.add( message );
+						}
+					}
+				}
+}				else {if (s.charAt(0)=='q') {{
+					{
+						// standardOutput<-println("Send quit to Directory Server to send to File Servers")
+						{
+							Object _arguments[] = { "Send quit to Directory Server to send to File Servers" };
+							Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+							__messages.add( message );
+						}
+					}
+				}
+}}}}}				{
 					// scanInput()
 					{
 						Object _arguments[] = {  };
-						Message message = new Message( self, self, "scanInput", _arguments, token_3_0, null );
+						Message message = new Message( self, self, "scanInput", _arguments, null, null );
 						__messages.add( message );
 					}
 				}

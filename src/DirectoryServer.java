@@ -259,8 +259,17 @@ public class DirectoryServer extends UniversalActor  {
 
 		int blockSize = 64;
 		public void store(String fileName, String content) {
+			{
+				// standardOutput<-println("I'm splitting up files and sending them where they need to be.")
+				{
+					Object _arguments[] = { "I'm splitting up files and sending them where they need to be." };
+					Message message = new Message( self, standardOutput, "println", _arguments, null, currentMessage.getContinuationToken() );
+					__messages.add( message );
+				}
+				throw new CurrentContinuationException();
+			}
 		}
-		public void retrieve() {
+		public void retrieve(String fileName) {
 		}
 	}
 }

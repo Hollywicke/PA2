@@ -45,7 +45,29 @@ behavior Client {
         if (s == null) {
             return;
         } else {
-            standardOutput <- println(s) @
+            standardOutput <- println(s);
+            String[] split = s.split(" ",s.length());
+            if(s.charAt(0) == 'd') {
+                standardOutput <- println("Create Directory Server Actor");
+                DirectoryServer ds = new DirectoryServer() at (new UAN (split[1]), new UAL (split[2]));
+            }
+            else if(s.charAt(0) == 'f') {
+                standardOutput <- println("Create File Server Actor");
+                FileServer fs = new FileServer at (new UAN (split[1]), new UAL (split[2]));
+            }
+            else if(s.charAt(0) == 'c') {
+                standardOutput <- println("Send file to Directory to send to File Servers");
+                DirectoryServer ds = (DirectoryServer) DirectoryServer.getReferenceByName(new UAN (split[1]));
+                ds <- store(split[2],inputScript.load("input/" + split[2]));
+            }
+            else if(s.charAt(0) == 'g') {
+                standardOutput <- println("Get File from Directory Server");
+                DirectoryServer ds = (DirectoryServer) DirectoryServer.getReferenceByName(new UAN (split[1]));
+                ds <- retrieve(split[2]);
+            }
+            else if(s.charAt(0) == 'q') {
+                standardOutput <- println("Send quit to Directory Server to send to File Servers");
+            }
             scanInput();
         }
         
