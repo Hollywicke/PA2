@@ -259,7 +259,10 @@ public class FileServer extends UniversalActor  {
 		}
 
 		int blockSize = 64;
+		FileUtility saveTo;
 		public void store(String fileName, String contents) {
+			saveTo = new FileUtility(fileName);
+			saveTo.save(fileName, contents);
 		}
 		public void retrieve(String fileName) {
 		}
