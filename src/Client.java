@@ -325,6 +325,8 @@ public class Client extends UniversalActor  {
 							__messages.add( message );
 						}
 					}
+					FileServer fs = ((FileServer)new FileServer(new UAN(split[2]), new UAL(split[3]),this).construct());
+					FileUtility.mkdir("servers/"+split[2].substring(split[2].lastIndexOf("/")+1));
 				}
 }				else {if (s.charAt(0)=='c') {{
 					{
@@ -337,9 +339,9 @@ public class Client extends UniversalActor  {
 					}
 					DirectoryServer ds = (DirectoryServer)DirectoryServer.getReferenceByName(new UAN(split[1]));
 					{
-						// ds<-store(split[2], inputScript.load("input/"+split[2]))
+						// ds<-store(split[2], FileUtility.load("input/"+split[2]))
 						{
-							Object _arguments[] = { split[2], inputScript.load("input/"+split[2]) };
+							Object _arguments[] = { split[2], FileUtility.load("input/"+split[2]) };
 							Message message = new Message( self, ds, "store", _arguments, null, null );
 							__messages.add( message );
 						}

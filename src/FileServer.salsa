@@ -15,6 +15,7 @@ behavior FileServer {
 
 
     int blockSize = 64;
+    FileUtility saveTo;
 
     /* Save some data to file
      *
@@ -24,15 +25,17 @@ behavior FileServer {
     /* You may pass and return any data you need. */
     void store(String fileName, String contents) {
         /*When being assigned a file part from the Directory Service, it stores the file part within its own file system*/
-        FileUtility.save(fileName, contents);
+        
+        saveTo.save(fileName, contents);
     }
 
 
     /* Retrieve some file block, possibly with order information */
     /* You may pass and return any data you need. */
-    String retrieve(String fileName) {
+    void retrieve(String fileName) {
     /* When a client requests a file, it returns the contents of that file along with what part of the file it is.*/
-        return FileUtility.load(filename);
+
+
         // @currentContinuation;
     }
 }
