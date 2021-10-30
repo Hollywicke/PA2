@@ -19,8 +19,32 @@ behavior Client {
     FileUtility inputScript;
     DirectoryServer ds;
 
-    void download(Hashtable servers){
-        
+    void lineHandler(String s){
+        String[] split = s.split(" ",s.length());
+        if(s.charAt(0) == 'd') {
+            standardOutput <- println("Create Directory Server Actor");
+            ds = new DirectoryServer() at (new UAN (split[1]), new UAL (split[2]));
+        }
+        else if(s.charAt(0) == 'f') {
+            standardOutput <- println("Create File Server Actor");
+            FileServer fs = new FileServer(ds.getUAN()) at (new UAN (split[2]), new UAL (split[3]));
+            FileUtility.mkdir("servers/" + split[2].substring(split[2].lastIndexOf("/")+1));
+            ds <- addFileServer(fs);
+        }
+        else if(s.charAt(0) == 'c') {
+            standardOutput <- println("Send file to Directory to send to File Servers");
+            ds = (DirectoryServer) DirectoryServer.getReferenceByName(new UAN (split[1]));
+            ds <- store(split[2],FileUtility.load("input/" + split[2]));
+        }
+        else if(s.charAt(0) == 'g') {
+            standardOutput <- println("Get File from Directory Server");
+            DirectoryServer ds = (DirectoryServer) DirectoryServer.getReferenceByName(new UAN (split[1]));
+            ds <- retrieve(split[2]);
+        }
+        else if(s.charAt(0) == 'q') {
+            standardOutput <- println("Send quit to Directory Server to send to File Servers");
+        }
+        return;
     }
 
 
@@ -51,29 +75,7 @@ behavior Client {
             return;
         } else {
             standardOutput <- println(s);
-            String[] split = s.split(" ",s.length());
-            if(s.charAt(0) == 'd') {
-                standardOutput <- println("Create Directory Server Actor");
-                ds = new DirectoryServer() at (new UAN (split[1]), new UAL (split[2]));
-            }
-            else if(s.charAt(0) == 'f') {
-                standardOutput <- println("Create File Server Actor");
-                FileServer fs = new FileServer(ds.getUAN()) at (new UAN (split[2]), new UAL (split[3]));
-                FileUtility.mkdir("servers/" + split[2].substring(split[2].lastIndexOf("/")+1));
-            }
-            else if(s.charAt(0) == 'c') {
-                standardOutput <- println("Send file to Directory to send to File Servers");
-                ds = (DirectoryServer) DirectoryServer.getReferenceByName(new UAN (split[1]));
-                ds <- store(split[2],FileUtility.load("input/" + split[2]));
-            }
-            else if(s.charAt(0) == 'g') {
-                standardOutput <- println("Get File from Directory Server");
-                DirectoryServer ds = (DirectoryServer) DirectoryServer.getReferenceByName(new UAN (split[1]));
-                ds <- retrieve(split[2]);
-            }
-            else if(s.charAt(0) == 'q') {
-                standardOutput <- println("Send quit to Directory Server to send to File Servers");
-            }
+            self <- lineHandler(s) @
             scanInput();
         }
         

@@ -291,15 +291,27 @@ public class DirectoryServer extends UniversalActor  {
 			while (i*64<content.length()) {
 				String servName = (String)fileServers.get(i%fileServers.size());
 				FileServer serv = (FileServer)FileServer.getReferenceByName(new UAN(servName));
-				{
-					// serv<-store(fileName+"_"+String.valueOf(i+1), content.substring(i*64, i*64+64))
+				if ((i*64)+64<=content.length()) {{
 					{
-						Object _arguments[] = { fileName+"_"+String.valueOf(i+1), content.substring(i*64, i*64+64) };
-						Message message = new Message( self, serv, "store", _arguments, null, null );
-						__messages.add( message );
+						// serv<-store(fileName+"_"+String.valueOf(i+1), content.substring(i*64, (i*64)+64))
+						{
+							Object _arguments[] = { fileName+"_"+String.valueOf(i+1), content.substring(i*64, (i*64)+64) };
+							Message message = new Message( self, serv, "store", _arguments, null, null );
+							__messages.add( message );
+						}
 					}
 				}
-				i++;
+}				else {{
+					{
+						// serv<-store(fileName+"_"+String.valueOf(i+1), content.substring(i*64))
+						{
+							Object _arguments[] = { fileName+"_"+String.valueOf(i+1), content.substring(i*64) };
+							Message message = new Message( self, serv, "store", _arguments, null, null );
+							__messages.add( message );
+						}
+					}
+				}
+}				i++;
 			}
 		}
 		public void retrieve(String fileName) {

@@ -271,16 +271,6 @@ public class FileServer extends UniversalActor  {
 		}
 		void construct(UAN serv){
 			dirServ = (DirectoryServer)DirectoryServer.getReferenceByName(serv);
-						{
-				// dirServ<-addFileServer(((FileServer)self))
-				{
-					Object _arguments[] = { ((FileServer)self) };
-					Message message = new Message( self, dirServ, "addFileServer", _arguments, null, null );
-					Object[] _propertyInfo = {  };
-					message.setProperty( "priority", _propertyInfo );
-					__messages.add( message );
-				}
-			}
 			v = new Vector();
 		}
 		public void store(String fileName, String contents) {

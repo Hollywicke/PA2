@@ -24,7 +24,6 @@ behavior FileServer {
     }
     FileServer(UAN serv) { 
             dirServ = (DirectoryServer) DirectoryServer.getReferenceByName(serv); 
-            dirServ <- addFileServer(self): priority;
             v = new Vector();
     }
     
@@ -36,7 +35,6 @@ behavior FileServer {
     /* You may pass and return any data you need. */
     void store(String fileName, String contents) {
         /*When being assigned a file part from the Directory Service, it stores the file part within its own file system*/
-        FileUtility.mkdir(fileName);
         String s = self.getUAN().toString();
         FileUtility.save("servers/" + s.substring(s.lastIndexOf("/")+1) + "/" + fileName, contents);
         v.add(fileName);
