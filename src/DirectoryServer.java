@@ -266,27 +266,40 @@ public class DirectoryServer extends UniversalActor  {
 			iter = fileServers.iterator();
 		}
 		public void addFileServer(FileServer fs) {
+			{
+				// standardOutput<-println("Adding server "+fs.getUAN().toString()+" to Directory")
+				{
+					Object _arguments[] = { "Adding server "+fs.getUAN().toString()+" to Directory" };
+					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+					__messages.add( message );
+				}
+			}
 			fileServers.add(fs.getUAN().toString());
 			Collections.sort(fileServers);
 			iter = fileServers.iterator();
 		}
 		public void store(String fileName, String content) {
-			int i = 0;
-			while (i<content.length()) {
-				if (!iter.hasNext()) {{
-					iter = fileServers.iterator();
+			{
+				// standardOutput<-println("Splitting and storing file: "+fileName)
+				{
+					Object _arguments[] = { "Splitting and storing file: "+fileName };
+					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+					__messages.add( message );
 				}
-}				String servName = (String)iter.next();
+			}
+			int i = 0;
+			while (i*64<content.length()) {
+				String servName = (String)fileServers.get(i%fileServers.size());
 				FileServer serv = (FileServer)FileServer.getReferenceByName(new UAN(servName));
 				{
-					// serv<-store(fileName+"_"+String.valueOf((i/64)+1), content.substring(i, i+64))
+					// serv<-store(fileName+"_"+String.valueOf(i+1), content.substring(i*64, i*64+64))
 					{
-						Object _arguments[] = { fileName+"_"+String.valueOf((i/64)+1), content.substring(i, i+64) };
+						Object _arguments[] = { fileName+"_"+String.valueOf(i+1), content.substring(i*64, i*64+64) };
 						Message message = new Message( self, serv, "store", _arguments, null, null );
 						__messages.add( message );
 					}
 				}
-				i += 64;
+				i++;
 			}
 		}
 		public void retrieve(String fileName) {

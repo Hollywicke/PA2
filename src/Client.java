@@ -269,6 +269,8 @@ public class Client extends UniversalActor  {
 		int blockSize = 64;
 		FileUtility inputScript;
 		DirectoryServer ds;
+		public void download(Hashtable servers) {
+		}
 		public void act(String[] args) {
 			if (args.length!=1) {{
 				{
@@ -326,7 +328,7 @@ public class Client extends UniversalActor  {
 							__messages.add( message );
 						}
 					}
-					FileServer fs = ((FileServer)new FileServer(new UAN(split[2]), new UAL(split[3]),this).construct(ds));
+					FileServer fs = ((FileServer)new FileServer(new UAN(split[2]), new UAL(split[3]),this).construct(ds.getUAN()));
 					FileUtility.mkdir("servers/"+split[2].substring(split[2].lastIndexOf("/")+1));
 				}
 }				else {if (s.charAt(0)=='c') {{

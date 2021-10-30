@@ -180,7 +180,7 @@ public class FileServer extends UniversalActor  {
 		return this;
 	}
 
-	public UniversalActor construct (DirectoryServer serv) {
+	public UniversalActor construct (UAN serv) {
 		Object[] __arguments = { serv };
 		this.send( new Message(this, this, "construct", __arguments, null, null) );
 		return this;
@@ -269,19 +269,22 @@ public class FileServer extends UniversalActor  {
 			dirServ = ((DirectoryServer)new DirectoryServer(this).construct());
 			v = new Vector();
 		}
-		void construct(DirectoryServer serv){
-			dirServ = (DirectoryServer)DirectoryServer.getReferenceByName(serv.getUAN());
+		void construct(UAN serv){
+			dirServ = (DirectoryServer)DirectoryServer.getReferenceByName(serv);
 						{
 				// dirServ<-addFileServer(((FileServer)self))
 				{
 					Object _arguments[] = { ((FileServer)self) };
 					Message message = new Message( self, dirServ, "addFileServer", _arguments, null, null );
+					Object[] _propertyInfo = {  };
+					message.setProperty( "priority", _propertyInfo );
 					__messages.add( message );
 				}
 			}
 			v = new Vector();
 		}
 		public void store(String fileName, String contents) {
+			FileUtility.mkdir(fileName);
 			String s = self.getUAN().toString();
 			FileUtility.save("servers/"+s.substring(s.lastIndexOf("/")+1)+"/"+fileName, contents);
 			v.add(fileName);

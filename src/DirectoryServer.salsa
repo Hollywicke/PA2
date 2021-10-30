@@ -31,6 +31,7 @@ behavior DirectoryServer {
     
 
     void addFileServer(FileServer fs){
+        standardOutput <- println("Adding server " + fs.getUAN().toString() + " to Directory");
         fileServers.add(fs.getUAN().toString());
         Collections.sort(fileServers);
         iter = fileServers.iterator();
@@ -50,15 +51,13 @@ behavior DirectoryServer {
      */
     /* You may pass and return any data you need. */
     void store(String fileName, String content) {
+        standardOutput <- println("Splitting and storing file: " + fileName);
         int i = 0;
-        while(i<content.length()){
-            if(!iter.hasNext()){
-                iter = fileServers.iterator();
-            }
-            String servName = (String) iter.next();
+        while(i*64<content.length()){
+            String servName = (String) fileServers.get(i%fileServers.size());
             FileServer serv = (FileServer) FileServer.getReferenceByName(new UAN(servName));
-            serv <- store(fileName + "_" + String.valueOf((i/64)+1), content.substring(i, i+64));
-            i+=64;
+            serv <- store(fileName + "_" + String.valueOf(i+1), content.substring(i*64, i*64+64));
+            i++;
         }
     }
 
