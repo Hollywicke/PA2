@@ -274,7 +274,6 @@ public class FileServer extends UniversalActor  {
 			v = new Vector();
 		}
 		public void store(String fileName, String contents) {
-			FileUtility.mkdir(fileName);
 			String s = self.getUAN().toString();
 			FileUtility.save("servers/"+s.substring(s.lastIndexOf("/")+1)+"/"+fileName, contents);
 			v.add(fileName);

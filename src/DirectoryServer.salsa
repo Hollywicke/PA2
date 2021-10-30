@@ -26,6 +26,7 @@ behavior DirectoryServer {
 
     DirectoryServer(){
         fileServers = new Vector();
+        fileLocations = new Hashtable();
         iter = fileServers.iterator();
     }
     
@@ -57,11 +58,12 @@ behavior DirectoryServer {
             String servName = (String) fileServers.get(i%fileServers.size());
             FileServer serv = (FileServer) FileServer.getReferenceByName(new UAN(servName));
             if((i*64)+64 <= content.length()){
-                serv <- store(fileName + "_" + String.valueOf(i+1), content.substring(i*64, (i*64)+64));
+                serv <- store(fileName + "_" + String.valueOf(i+1) + ".txt", content.substring(i*64, (i*64)+64));
             }
             else{
-                serv <- store(fileName + "_" + String.valueOf(i+1), content.substring(i*64));
+                serv <- store(fileName + "_" + String.valueOf(i+1) + ".txt", content.substring(i*64));
             }
+            fileLocations.put(fileName + "_" + String.valueOf(i+1) + ".txt",servName); 
             i++;
         }
     }
@@ -69,8 +71,9 @@ behavior DirectoryServer {
 
     /* Given a file name, return the servers and blocks it's located on. */
     /* You may pass and return any data you need. */
-    void retrieve(String fileName) {
-        // @currentContinuation;
+    Hashtable retrieve(String fileName) {
+        Hashtable temp = new Hashtable();
+        return temp;
     }
 
 }

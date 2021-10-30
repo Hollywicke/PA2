@@ -19,6 +19,10 @@ behavior Client {
     FileUtility inputScript;
     DirectoryServer ds;
 
+    void downloadFile(Hashtable ht, String fileName){
+        while(ht.containsKey())
+    }
+
     void lineHandler(String s){
         String[] split = s.split(" ",s.length());
         if(s.charAt(0) == 'd') {
@@ -34,7 +38,7 @@ behavior Client {
         else if(s.charAt(0) == 'c') {
             standardOutput <- println("Send file to Directory to send to File Servers");
             ds = (DirectoryServer) DirectoryServer.getReferenceByName(new UAN (split[1]));
-            ds <- store(split[2],FileUtility.load("input/" + split[2]));
+            ds <- store(split[2].substring(0,split[2].lastIndexOf(".")),FileUtility.load("input/" + split[2]));
         }
         else if(s.charAt(0) == 'g') {
             standardOutput <- println("Get File from Directory Server");

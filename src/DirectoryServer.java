@@ -263,6 +263,7 @@ public class DirectoryServer extends UniversalActor  {
 		Iterator iter;
 		void construct(){
 			fileServers = new Vector();
+			fileLocations = new Hashtable();
 			iter = fileServers.iterator();
 		}
 		public void addFileServer(FileServer fs) {
@@ -293,9 +294,9 @@ public class DirectoryServer extends UniversalActor  {
 				FileServer serv = (FileServer)FileServer.getReferenceByName(new UAN(servName));
 				if ((i*64)+64<=content.length()) {{
 					{
-						// serv<-store(fileName+"_"+String.valueOf(i+1), content.substring(i*64, (i*64)+64))
+						// serv<-store(fileName+"_"+String.valueOf(i+1)+".txt", content.substring(i*64, (i*64)+64))
 						{
-							Object _arguments[] = { fileName+"_"+String.valueOf(i+1), content.substring(i*64, (i*64)+64) };
+							Object _arguments[] = { fileName+"_"+String.valueOf(i+1)+".txt", content.substring(i*64, (i*64)+64) };
 							Message message = new Message( self, serv, "store", _arguments, null, null );
 							__messages.add( message );
 						}
@@ -303,18 +304,21 @@ public class DirectoryServer extends UniversalActor  {
 				}
 }				else {{
 					{
-						// serv<-store(fileName+"_"+String.valueOf(i+1), content.substring(i*64))
+						// serv<-store(fileName+"_"+String.valueOf(i+1)+".txt", content.substring(i*64))
 						{
-							Object _arguments[] = { fileName+"_"+String.valueOf(i+1), content.substring(i*64) };
+							Object _arguments[] = { fileName+"_"+String.valueOf(i+1)+".txt", content.substring(i*64) };
 							Message message = new Message( self, serv, "store", _arguments, null, null );
 							__messages.add( message );
 						}
 					}
 				}
-}				i++;
+}				fileLocations.put(fileName+"_"+String.valueOf(i+1)+".txt", servName);
+				i++;
 			}
 		}
-		public void retrieve(String fileName) {
+		public Hashtable retrieve(String fileName) {
+			Hashtable temp = new Hashtable();
+			return temp;
 		}
 	}
 }

@@ -313,9 +313,9 @@ public class Client extends UniversalActor  {
 				}
 				ds = (DirectoryServer)DirectoryServer.getReferenceByName(new UAN(split[1]));
 				{
-					// ds<-store(split[2], FileUtility.load("input/"+split[2]))
+					// ds<-store(split[2].substring(0, split[2].lastIndexOf(".")), FileUtility.load("input/"+split[2]))
 					{
-						Object _arguments[] = { split[2], FileUtility.load("input/"+split[2]) };
+						Object _arguments[] = { split[2].substring(0, split[2].lastIndexOf(".")), FileUtility.load("input/"+split[2]) };
 						Message message = new Message( self, ds, "store", _arguments, null, null );
 						__messages.add( message );
 					}
