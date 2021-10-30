@@ -1,1 +1,0 @@
-Theater listening on: rmsp://127.0.1.1:4041/

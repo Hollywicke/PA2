@@ -174,8 +174,14 @@ public class FileServer extends UniversalActor  {
 		}
 	}
 
-	public UniversalActor construct() {
-		Object[] __arguments = { };
+	public UniversalActor construct () {
+		Object[] __arguments = {  };
+		this.send( new Message(this, this, "construct", __arguments, null, null) );
+		return this;
+	}
+
+	public UniversalActor construct (DirectoryServer serv) {
+		Object[] __arguments = { serv };
 		this.send( new Message(this, this, "construct", __arguments, null, null) );
 		return this;
 	}
@@ -200,8 +206,6 @@ public class FileServer extends UniversalActor  {
 			addClassName( "src.FileServer$State" );
 			addMethodsForClasses();
 		}
-
-		public void construct() {}
 
 		public void process(Message message) {
 			Method[] matches = getMatches(message.getMethodName());
@@ -259,11 +263,34 @@ public class FileServer extends UniversalActor  {
 		}
 
 		int blockSize = 64;
-		FileUtility saveTo;
-		public void store(String fileName, String contents) {
-			saveTo.save(fileName, contents);
+		DirectoryServer dirServ;
+		Vector v;
+		void construct(){
+			dirServ = ((DirectoryServer)new DirectoryServer(this).construct());
+			v = new Vector();
 		}
-		public void retrieve(String fileName) {
+		void construct(DirectoryServer serv){
+			dirServ = (DirectoryServer)DirectoryServer.getReferenceByName(serv.getUAN());
+						{
+				// dirServ<-addFileServer(((FileServer)self))
+				{
+					Object _arguments[] = { ((FileServer)self) };
+					Message message = new Message( self, dirServ, "addFileServer", _arguments, null, null );
+					__messages.add( message );
+				}
+			}
+			v = new Vector();
+		}
+		public void store(String fileName, String contents) {
+			String s = self.getUAN().toString();
+			FileUtility.save("servers/"+s.substring(s.lastIndexOf("/")+1)+"/"+fileName, contents);
+			v.add(fileName);
+		}
+		public boolean contains(String fileName) {
+			return v.contains(fileName);
+		}
+		public String retrieve(String fileName) {
+			return FileUtility.load(fileName);
 		}
 	}
 }

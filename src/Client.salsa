@@ -17,6 +17,7 @@ behavior Client {
 
     int blockSize = 64;
     FileUtility inputScript;
+    DirectoryServer ds;
 
 
     /* Your program's first input must be the path to the 
@@ -49,16 +50,16 @@ behavior Client {
             String[] split = s.split(" ",s.length());
             if(s.charAt(0) == 'd') {
                 standardOutput <- println("Create Directory Server Actor");
-                DirectoryServer ds = new DirectoryServer() at (new UAN (split[1]), new UAL (split[2]));
+                ds = new DirectoryServer() at (new UAN (split[1]), new UAL (split[2]));
             }
             else if(s.charAt(0) == 'f') {
                 standardOutput <- println("Create File Server Actor");
-                FileServer fs = new FileServer() at (new UAN (split[2]), new UAL (split[3]));
+                FileServer fs = new FileServer(ds) at (new UAN (split[2]), new UAL (split[3]));
                 FileUtility.mkdir("servers/" + split[2].substring(split[2].lastIndexOf("/")+1));
             }
             else if(s.charAt(0) == 'c') {
                 standardOutput <- println("Send file to Directory to send to File Servers");
-                DirectoryServer ds = (DirectoryServer) DirectoryServer.getReferenceByName(new UAN (split[1]));
+                ds = (DirectoryServer) DirectoryServer.getReferenceByName(new UAN (split[1]));
                 ds<-store(split[2],FileUtility.load("input/" + split[2]));
             }
             else if(s.charAt(0) == 'g') {

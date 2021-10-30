@@ -15,16 +15,17 @@ behavior FileServer {
 
 
     int blockSize = 64;
-    DirectoryServer = dirServ;
-    Vector<String> v;
+    DirectoryServer dirServ;
+    Vector v;
 
     FileServer() { 
             dirServ = new DirectoryServer(); 
-            v = new Vector<String>();
+            v = new Vector();
     }
     FileServer(DirectoryServer serv) { 
-            dirServ = serv; 
-            v = new Vector<String>();
+            dirServ = (DirectoryServer) DirectoryServer.getReferenceByName(serv.getUAN()); 
+            dirServ <- addFileServer(self);
+            v = new Vector();
     }
     
     /* Save some data to file
@@ -35,12 +36,13 @@ behavior FileServer {
     /* You may pass and return any data you need. */
     void store(String fileName, String contents) {
         /*When being assigned a file part from the Directory Service, it stores the file part within its own file system*/
-        FileUtility.mkdir(fileName);
-        FileUtility.save(fileName, contents);
+        //FileUtility.mkdir(fileName);
+        String s = self.getUAN().toString();
+        FileUtility.save("servers/" + s.substring(s.lastIndexOf("/")+1) + "/" + fileName, contents);
         v.add(fileName);
     }
 
-    bool contains(String fileName){
+    boolean contains(String fileName){
         return v.contains(fileName);
     }
 

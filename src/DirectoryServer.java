@@ -32,6 +32,8 @@ import salsa.resources.ActorService;
 // End SALSA compiler generated import delcarations.
 
 import java.util.Collections;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 public class DirectoryServer extends UniversalActor  {
 	public static void main(String args[]) {
@@ -173,8 +175,8 @@ public class DirectoryServer extends UniversalActor  {
 		}
 	}
 
-	public UniversalActor construct() {
-		Object[] __arguments = { };
+	public UniversalActor construct () {
+		Object[] __arguments = {  };
 		this.send( new Message(this, this, "construct", __arguments, null, null) );
 		return this;
 	}
@@ -199,8 +201,6 @@ public class DirectoryServer extends UniversalActor  {
 			addClassName( "src.DirectoryServer$State" );
 			addMethodsForClasses();
 		}
-
-		public void construct() {}
 
 		public void process(Message message) {
 			Method[] matches = getMatches(message.getMethodName());
@@ -258,7 +258,36 @@ public class DirectoryServer extends UniversalActor  {
 		}
 
 		int blockSize = 64;
+		Vector fileServers;
+		Hashtable fileLocations;
+		Iterator iter;
+		void construct(){
+			fileServers = new Vector();
+			iter = fileServers.iterator();
+		}
+		public void addFileServer(FileServer fs) {
+			fileServers.add(fs.getUAN().toString());
+			Collections.sort(fileServers);
+			iter = fileServers.iterator();
+		}
 		public void store(String fileName, String content) {
+			int i = 0;
+			while (i<content.length()) {
+				if (!iter.hasNext()) {{
+					iter = fileServers.iterator();
+				}
+}				String servName = (String)iter.next();
+				FileServer serv = (FileServer)FileServer.getReferenceByName(new UAN(servName));
+				{
+					// serv<-store(fileName+"_"+String.valueOf((i/64)+1), content.substring(i, i+64))
+					{
+						Object _arguments[] = { fileName+"_"+String.valueOf((i/64)+1), content.substring(i, i+64) };
+						Message message = new Message( self, serv, "store", _arguments, null, null );
+						__messages.add( message );
+					}
+				}
+				i += 64;
+			}
 		}
 		public void retrieve(String fileName) {
 		}

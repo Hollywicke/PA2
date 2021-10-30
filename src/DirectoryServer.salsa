@@ -1,5 +1,7 @@
 module src;
 import java.util.Collections;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 
 /*
@@ -18,7 +20,21 @@ import java.util.Collections;
 behavior DirectoryServer {
     
     int blockSize = 64;
+    Vector fileServers;
+    Hashtable fileLocations;
+    Iterator iter;
+
+    DirectoryServer(){
+        fileServers = new Vector();
+        iter = fileServers.iterator();
+    }
     
+
+    void addFileServer(FileServer fs){
+        fileServers.add(fs.getUAN().toString());
+        Collections.sort(fileServers);
+        iter = fileServers.iterator();
+    }
 
     /* Take a file and save it to known file servers.
      *
@@ -34,7 +50,16 @@ behavior DirectoryServer {
      */
     /* You may pass and return any data you need. */
     void store(String fileName, String content) {
-        //@currentContinuation;
+        int i = 0;
+        while(i<content.length()){
+            if(!iter.hasNext()){
+                iter = fileServers.iterator();
+            }
+            String servName = (String) iter.next();
+            FileServer serv = (FileServer) FileServer.getReferenceByName(new UAN(servName));
+            serv <- store(fileName + "_" + String.valueOf((i/64)+1), content.substring(i, i+64));
+            i+=64;
+        }
     }
 
 
