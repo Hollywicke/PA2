@@ -15,8 +15,18 @@ behavior FileServer {
 
 
     int blockSize = 64;
-    FileUtility saveTo;
+    DirectoryServer = dirServ;
+    Vector<String> v;
 
+    FileServer() { 
+            dirServ = new DirectoryServer(); 
+            v = new Vector<String>();
+    }
+    FileServer(DirectoryServer serv) { 
+            dirServ = serv; 
+            v = new Vector<String>();
+    }
+    
     /* Save some data to file
      *
      * Each file server will have its own
@@ -25,16 +35,20 @@ behavior FileServer {
     /* You may pass and return any data you need. */
     void store(String fileName, String contents) {
         /*When being assigned a file part from the Directory Service, it stores the file part within its own file system*/
-        
-        saveTo.save(fileName, contents);
+        FileUtility.mkdir(fileName);
+        FileUtility.save(fileName, contents);
+        v.add(fileName);
     }
 
+    bool contains(String fileName){
+        return v.contains(fileName);
+    }
 
     /* Retrieve some file block, possibly with order information */
     /* You may pass and return any data you need. */
-    void retrieve(String fileName) {
+    String retrieve(String fileName) {
     /* When a client requests a file, it returns the contents of that file along with what part of the file it is.*/
-
+        return FileUtility.load(fileName);
 
         // @currentContinuation;
     }
