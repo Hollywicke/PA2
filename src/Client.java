@@ -269,6 +269,17 @@ public class Client extends UniversalActor  {
 		int blockSize = 64;
 		FileUtility inputScript;
 		DirectoryServer ds;
+		public void downloadFile(Hashtable ht, String fileName) {
+			Set keys = ht.keySet();
+			Set values = ht.values();
+			String curKey = "";
+			String curValue = "";
+			while (keys.hasNext()) {
+				curKey = keys.next();
+				curValue = values.next();
+				FileUtility.load(curkey);
+			}
+		}
 		public void lineHandler(String s) {
 			String[] split = s.split(" ", s.length());
 			if (s.charAt(0)=='d') {{
