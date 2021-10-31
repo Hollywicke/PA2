@@ -318,6 +318,17 @@ public class DirectoryServer extends UniversalActor  {
 		}
 		public Hashtable retrieve(String fileName) {
 			Hashtable temp = new Hashtable();
+			Set keys = fileLocations.keySet();
+			Set values = fileLocations.values();
+			String curKey = "";
+			String curValue = "";
+			while (keys.hasNext()) {
+				curKey = keys.next();
+				curValue = values.next();
+				if (curKey.contains(fileName)) {{
+					temp.put(curKey, curValue);
+				}
+}			}
 			return temp;
 		}
 	}

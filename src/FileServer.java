@@ -282,7 +282,8 @@ public class FileServer extends UniversalActor  {
 			return v.contains(fileName);
 		}
 		public String retrieve(String fileName) {
-			return FileUtility.load(fileName);
+			String s = self.getUAN().toString();
+			return FileUtility.load("servers/"+s.substring(s.lastIndexOf("/")+1)+"/"+fileName);
 		}
 	}
 }
