@@ -20,7 +20,15 @@ behavior Client {
     DirectoryServer ds;
 
     void downloadFile(Hashtable ht, String fileName){
-        while(ht.containsKey())
+        Set keys = ht.keySet();
+        Set values = ht.values();
+        String curKey = "";
+        String curValue = "";
+        while(keys.hasNext()){
+            curKey = keys.next();
+            curValue = values.next();
+            FileUtility.load(curkey);
+        }
     }
 
     void lineHandler(String s){

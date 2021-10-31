@@ -81,7 +81,7 @@ behavior DirectoryServer {
             curKey = keys.next();
             curValue = values.next();
             if(curKey.contains(fileName)){
-              temp.put(curKey ,curValue);
+              temp.put(curKey, curValue);
             }
         }
         return temp;
