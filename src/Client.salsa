@@ -24,10 +24,12 @@ behavior Client {
         Set values = ht.values();
         String curKey = "";
         String curValue = "";
-        while(keys.hasNext()){
-            curKey = keys.next();
+        Iterator keyIt = keys.iterator();
+        while(keyIt <- hasNext()){
+            curKey = keyIt.next();
             curValue = values.next();
-            FileUtility.load(curkey);
+            FileServer fs = (FileServer) FileServer.getReferenceByName(curValue)
+            fs.retrieve(curKey)
         }
     }
 
