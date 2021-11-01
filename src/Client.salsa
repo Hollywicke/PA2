@@ -19,19 +19,27 @@ behavior Client {
     FileUtility inputScript;
     DirectoryServer ds;
 
+    String toString(Object tok){
+        return tok.toString();
+    }
+
     void downloadFile(Hashtable ht, String fileName){
-        Set keys = ht.keySet();
-        Set values = ht.values();
+        Vector keys = new Vector(ht.keySet());
+        Collections.sort(keys);
+        //Set values = ht.values();
+        String content = "";
         String curKey = "";
         String curValue = "";
         Iterator keyIt = keys.iterator();
-        Iterator valueIt = values.iterator();
-        while(keyIt <- hasNext()){
-            curKey = keyIt.next();
-            curValue = valueIt.next();
-            FileServer fs = (FileServer) FileServer.getReferenceByName(curValue)
-            fs.retrieve(curKey)
+        while(keyIt.hasNext()){
+            curKey = (String) keyIt.next();
+            //curValue = values.next();
+            curValue = (String) ht.get(curKey);
+            FileServer fs = (FileServer) FileServer.getReferenceByName(curValue);
+            token x = fs <- retrieve(curKey);
+            content += toString(x);
         }
+        FileUtility.save("downloads/" + fileName,content);
     }
 
     void lineHandler(String s){
@@ -54,7 +62,7 @@ behavior Client {
         else if(s.charAt(0) == 'g') {
             standardOutput <- println("Get File from Directory Server");
             DirectoryServer ds = (DirectoryServer) DirectoryServer.getReferenceByName(new UAN (split[1]));
-            ds <- retrieve(split[2]);
+            ds <- retrieve(split[2]) @ downloadFile(token, split[2]);
         }
         else if(s.charAt(0) == 'q') {
             standardOutput <- println("Send quit to Directory Server to send to File Servers");

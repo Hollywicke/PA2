@@ -283,6 +283,14 @@ public class FileServer extends UniversalActor  {
 		}
 		public String retrieve(String fileName) {
 			String s = self.getUAN().toString();
+			{
+				// standardOutput<-println("Retrieving file "+fileName+" from "+s)
+				{
+					Object _arguments[] = { "Retrieving file "+fileName+" from "+s };
+					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+					__messages.add( message );
+				}
+			}
 			return FileUtility.load("servers/"+s.substring(s.lastIndexOf("/")+1)+"/"+fileName);
 		}
 	}

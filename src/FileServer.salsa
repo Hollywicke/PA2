@@ -49,6 +49,7 @@ behavior FileServer {
     String retrieve(String fileName) {
     /* When a client requests a file, it returns the contents of that file along with what part of the file it is.*/
         String s = self.getUAN().toString();
+        standardOutput <- println("Retrieving file " + fileName + " from " + s);
         return FileUtility.load("servers/" + s.substring(s.lastIndexOf("/")+1) + "/" + fileName);
 
         // @currentContinuation;

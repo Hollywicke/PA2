@@ -269,16 +269,32 @@ public class Client extends UniversalActor  {
 		int blockSize = 64;
 		FileUtility inputScript;
 		DirectoryServer ds;
+		public String toString(Object tok) {
+			return tok.toString();
+		}
 		public void downloadFile(Hashtable ht, String fileName) {
-			Set keys = ht.keySet();
-			Set values = ht.values();
+			Vector keys = new Vector(ht.keySet());
+			Collections.sort(keys);
+			String content = "";
 			String curKey = "";
 			String curValue = "";
-			while (keys.hasNext()) {
-				curKey = keys.next();
-				curValue = values.next();
-				FileUtility.load(curkey);
+			Iterator keyIt = keys.iterator();
+			while (keyIt.hasNext()) {
+				curKey = (String)keyIt.next();
+				curValue = (String)ht.get(curKey);
+				FileServer fs = (FileServer)FileServer.getReferenceByName(curValue);
+				Token x = new Token("x");
+				{
+					// token x = fs<-retrieve(curKey)
+					{
+						Object _arguments[] = { curKey };
+						Message message = new Message( self, fs, "retrieve", _arguments, null, x );
+						__messages.add( message );
+					}
+				}
+				content += toString(x);
 			}
+			FileUtility.save("downloads/"+fileName, content);
 		}
 		public void lineHandler(String s) {
 			String[] split = s.split(" ", s.length());
@@ -343,10 +359,17 @@ public class Client extends UniversalActor  {
 				}
 				DirectoryServer ds = (DirectoryServer)DirectoryServer.getReferenceByName(new UAN(split[1]));
 				{
+					Token token_3_0 = new Token();
 					// ds<-retrieve(split[2])
 					{
 						Object _arguments[] = { split[2] };
-						Message message = new Message( self, ds, "retrieve", _arguments, null, null );
+						Message message = new Message( self, ds, "retrieve", _arguments, null, token_3_0 );
+						__messages.add( message );
+					}
+					// downloadFile(token, split[2])
+					{
+						Object _arguments[] = { token_3_0, split[2] };
+						Message message = new Message( self, self, "downloadFile", _arguments, token_3_0, null );
 						__messages.add( message );
 					}
 				}

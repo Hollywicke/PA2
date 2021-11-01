@@ -318,13 +318,13 @@ public class DirectoryServer extends UniversalActor  {
 		}
 		public Hashtable retrieve(String fileName) {
 			Hashtable temp = new Hashtable();
-			Set keys = fileLocations.keySet();
-			Set values = fileLocations.values();
+			Vector keys = new Vector(fileLocations.keySet());
 			String curKey = "";
 			String curValue = "";
-			while (keys.hasNext()) {
-				curKey = keys.next();
-				curValue = values.next();
+			Iterator keyIt = keys.iterator();
+			while (keyIt.hasNext()) {
+				curKey = (String)keyIt.next();
+				curValue = (String)fileLocations.get(curKey);
 				if (curKey.contains(fileName)) {{
 					temp.put(curKey, curValue);
 				}
