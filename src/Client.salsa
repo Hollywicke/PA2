@@ -19,27 +19,34 @@ behavior Client {
     FileUtility inputScript;
     DirectoryServer ds;
 
-    String toString(Object tok){
-        return tok.toString();
+
+    void append(String s, Object[] tkn){
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < tkn.length;i++){
+            sb.append(tkn[i]);
+        }
+        FileUtility.save("downloads/" + s, sb.toString());
     }
 
     void downloadFile(Hashtable ht, String fileName){
         Vector keys = new Vector(ht.keySet());
         Collections.sort(keys);
         //Set values = ht.values();
+        standardOutput <- println(keys.size());
         String content = "";
         String curKey = "";
         String curValue = "";
         Iterator keyIt = keys.iterator();
-        while(keyIt.hasNext()){
-            curKey = (String) keyIt.next();
-            //curValue = values.next();
-            curValue = (String) ht.get(curKey);
-            FileServer fs = (FileServer) FileServer.getReferenceByName(curValue);
-            token x = fs <- retrieve(curKey);
-            content += toString(x);
-        }
-        FileUtility.save("downloads/" + fileName,content);
+        join {
+            while(keyIt.hasNext()){
+                curKey = (String) keyIt.next();
+                //curValue = values.next();
+                curValue = (String) ht.get(curKey);
+                FileServer fs = (FileServer) FileServer.getReferenceByName(curValue);
+                fs <- retrieve(curKey);
+            }
+        } @ self <- append(fileName, token);
+        //FileUtility.save("downloads/" + fileName,content);
     }
 
     void lineHandler(String s){
@@ -52,20 +59,20 @@ behavior Client {
             standardOutput <- println("Create File Server Actor");
             FileServer fs = new FileServer(ds.getUAN()) at (new UAN (split[2]), new UAL (split[3]));
             FileUtility.mkdir("servers/" + split[2].substring(split[2].lastIndexOf("/")+1));
-            ds <- addFileServer(fs);
+            ds <- addFileServer(fs) @currentContinuation;
         }
         else if(s.charAt(0) == 'c') {
             standardOutput <- println("Send file to Directory to send to File Servers");
             ds = (DirectoryServer) DirectoryServer.getReferenceByName(new UAN (split[1]));
-            ds <- store(split[2].substring(0,split[2].lastIndexOf(".")),FileUtility.load("input/" + split[2]));
+            ds <- store(split[2].substring(0,split[2].lastIndexOf(".")),FileUtility.load("input/" + split[2])) @currentContinuation;
         }
         else if(s.charAt(0) == 'g') {
             standardOutput <- println("Get File from Directory Server");
             DirectoryServer ds = (DirectoryServer) DirectoryServer.getReferenceByName(new UAN (split[1]));
-            ds <- retrieve(split[2]) @ downloadFile(token, split[2]);
+            ds <- retrieve(split[2]) @ downloadFile(token, split[2]) @currentContinuation;
         }
         else if(s.charAt(0) == 'q') {
-            standardOutput <- println("Send quit to Directory Server to send to File Servers");
+            standardOutput <- println("Send quit to Directory Server to send to File Servers") @currentContinuation;
         }
         return;
     }
@@ -97,7 +104,7 @@ behavior Client {
         if (s == null) {
             return;
         } else {
-            standardOutput <- println(s);
+            standardOutput <- println(s) @
             self <- lineHandler(s) @
             scanInput();
         }

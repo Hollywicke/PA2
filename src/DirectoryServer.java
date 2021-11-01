@@ -319,13 +319,30 @@ public class DirectoryServer extends UniversalActor  {
 		public Hashtable retrieve(String fileName) {
 			Hashtable temp = new Hashtable();
 			Vector keys = new Vector(fileLocations.keySet());
+			String noExt = fileName.substring(0, fileName.lastIndexOf("."));
+			{
+				// standardOutput<-println("Retrieving parts of "+fileName+" from "+String.valueOf(keys.size())+" servers.")
+				{
+					Object _arguments[] = { "Retrieving parts of "+fileName+" from "+String.valueOf(keys.size())+" servers." };
+					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+					__messages.add( message );
+				}
+			}
 			String curKey = "";
 			String curValue = "";
 			Iterator keyIt = keys.iterator();
 			while (keyIt.hasNext()) {
 				curKey = (String)keyIt.next();
 				curValue = (String)fileLocations.get(curKey);
-				if (curKey.contains(fileName)) {{
+				{
+					// standardOutput<-println("Does "+curKey+" contain "+noExt)
+					{
+						Object _arguments[] = { "Does "+curKey+" contain "+noExt };
+						Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+						__messages.add( message );
+					}
+				}
+				if (curKey.contains(noExt)) {{
 					temp.put(curKey, curValue);
 				}
 }			}

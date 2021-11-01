@@ -67,7 +67,7 @@ class FileUtility {
 		File fileOut = new File(filePath);
 		FileWriter writer;
 
-		// standardOutput<-println("Save: " + dir + " " + fileAddress + " " + contents);
+		//standardOutput<-println("Save: " + dir + " " + fileAddress + " " + contents);
 
 		try {
 			if (!fileOut.exists()) {

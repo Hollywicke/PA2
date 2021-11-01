@@ -74,6 +74,8 @@ behavior DirectoryServer {
     Hashtable retrieve(String fileName) {
         Hashtable temp = new Hashtable();
         Vector keys = new Vector(fileLocations.keySet());
+        String noExt = fileName.substring(0,fileName.lastIndexOf("."));
+        standardOutput <- println("Retrieving parts of " + fileName + " from " + String.valueOf(keys.size()) + " servers.");
         //Set values = fileLocations.values();
         String curKey = "";
         String curValue = "";
@@ -82,7 +84,8 @@ behavior DirectoryServer {
             curKey = (String) keyIt.next();
             //curValue = values.next();
             curValue = (String) fileLocations.get(curKey);
-            if(curKey.contains(fileName)){
+            standardOutput <- println("Does " + curKey + " contain " + noExt);
+            if(curKey.contains(noExt)){
               temp.put(curKey, curValue);
             }
         }

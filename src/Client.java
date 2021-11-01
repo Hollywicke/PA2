@@ -269,32 +269,53 @@ public class Client extends UniversalActor  {
 		int blockSize = 64;
 		FileUtility inputScript;
 		DirectoryServer ds;
-		public String toString(Object tok) {
-			return tok.toString();
+		public void append(String s, Object[] tkn) {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i<tkn.length; i++){
+				sb.append(tkn[i]);
+			}
+			FileUtility.save("downloads/"+s, sb.toString());
 		}
 		public void downloadFile(Hashtable ht, String fileName) {
 			Vector keys = new Vector(ht.keySet());
 			Collections.sort(keys);
+			{
+				// standardOutput<-println(keys.size())
+				{
+					Object _arguments[] = { keys.size() };
+					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+					__messages.add( message );
+				}
+			}
 			String content = "";
 			String curKey = "";
 			String curValue = "";
 			Iterator keyIt = keys.iterator();
-			while (keyIt.hasNext()) {
-				curKey = (String)keyIt.next();
-				curValue = (String)ht.get(curKey);
-				FileServer fs = (FileServer)FileServer.getReferenceByName(curValue);
-				Token x = new Token("x");
-				{
-					// token x = fs<-retrieve(curKey)
+			{
+				Token token_2_0 = new Token();
+				// join block
+				token_2_0.setJoinDirector();
+				while (keyIt.hasNext()) {
+					curKey = (String)keyIt.next();
+					curValue = (String)ht.get(curKey);
+					FileServer fs = (FileServer)FileServer.getReferenceByName(curValue);
 					{
-						Object _arguments[] = { curKey };
-						Message message = new Message( self, fs, "retrieve", _arguments, null, x );
-						__messages.add( message );
+						// fs<-retrieve(curKey)
+						{
+							Object _arguments[] = { curKey };
+							Message message = new Message( self, fs, "retrieve", _arguments, null, token_2_0 );
+							__messages.add( message );
+						}
 					}
 				}
-				content += toString(x);
+				addJoinToken(token_2_0);
+				// ((Client)self)<-append(fileName, token)
+				{
+					Object _arguments[] = { fileName, token_2_0 };
+					Message message = new Message( self, ((Client)self), "append", _arguments, token_2_0, null );
+					__messages.add( message );
+				}
 			}
-			FileUtility.save("downloads/"+fileName, content);
 		}
 		public void lineHandler(String s) {
 			String[] split = s.split(" ", s.length());
@@ -324,9 +345,10 @@ public class Client extends UniversalActor  {
 					// ds<-addFileServer(fs)
 					{
 						Object _arguments[] = { fs };
-						Message message = new Message( self, ds, "addFileServer", _arguments, null, null );
+						Message message = new Message( self, ds, "addFileServer", _arguments, null, currentMessage.getContinuationToken() );
 						__messages.add( message );
 					}
+					throw new CurrentContinuationException();
 				}
 			}
 }			else {if (s.charAt(0)=='c') {{
@@ -343,9 +365,10 @@ public class Client extends UniversalActor  {
 					// ds<-store(split[2].substring(0, split[2].lastIndexOf(".")), FileUtility.load("input/"+split[2]))
 					{
 						Object _arguments[] = { split[2].substring(0, split[2].lastIndexOf(".")), FileUtility.load("input/"+split[2]) };
-						Message message = new Message( self, ds, "store", _arguments, null, null );
+						Message message = new Message( self, ds, "store", _arguments, null, currentMessage.getContinuationToken() );
 						__messages.add( message );
 					}
+					throw new CurrentContinuationException();
 				}
 			}
 }			else {if (s.charAt(0)=='g') {{
@@ -369,9 +392,10 @@ public class Client extends UniversalActor  {
 					// downloadFile(token, split[2])
 					{
 						Object _arguments[] = { token_3_0, split[2] };
-						Message message = new Message( self, self, "downloadFile", _arguments, token_3_0, null );
+						Message message = new Message( self, self, "downloadFile", _arguments, token_3_0, currentMessage.getContinuationToken() );
 						__messages.add( message );
 					}
+					throw new CurrentContinuationException();
 				}
 			}
 }			else {if (s.charAt(0)=='q') {{
@@ -379,9 +403,10 @@ public class Client extends UniversalActor  {
 					// standardOutput<-println("Send quit to Directory Server to send to File Servers")
 					{
 						Object _arguments[] = { "Send quit to Directory Server to send to File Servers" };
-						Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+						Message message = new Message( self, standardOutput, "println", _arguments, null, currentMessage.getContinuationToken() );
 						__messages.add( message );
 					}
+					throw new CurrentContinuationException();
 				}
 			}
 }}}}}			return;
@@ -415,25 +440,24 @@ public class Client extends UniversalActor  {
 			}
 }			else {{
 				{
+					Token token_3_0 = new Token();
+					Token token_3_1 = new Token();
 					// standardOutput<-println(s)
 					{
 						Object _arguments[] = { s };
-						Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+						Message message = new Message( self, standardOutput, "println", _arguments, null, token_3_0 );
 						__messages.add( message );
 					}
-				}
-				{
-					Token token_3_0 = new Token();
 					// ((Client)self)<-lineHandler(s)
 					{
 						Object _arguments[] = { s };
-						Message message = new Message( self, ((Client)self), "lineHandler", _arguments, null, token_3_0 );
+						Message message = new Message( self, ((Client)self), "lineHandler", _arguments, token_3_0, token_3_1 );
 						__messages.add( message );
 					}
 					// scanInput()
 					{
 						Object _arguments[] = {  };
-						Message message = new Message( self, self, "scanInput", _arguments, token_3_0, null );
+						Message message = new Message( self, self, "scanInput", _arguments, token_3_1, null );
 						__messages.add( message );
 					}
 				}
