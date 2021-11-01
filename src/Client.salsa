@@ -25,9 +25,10 @@ behavior Client {
         String curKey = "";
         String curValue = "";
         Iterator keyIt = keys.iterator();
+        Iterator valueIt = values.iterator();
         while(keyIt <- hasNext()){
             curKey = keyIt.next();
-            curValue = values.next();
+            curValue = valueIt.next();
             FileServer fs = (FileServer) FileServer.getReferenceByName(curValue)
             fs.retrieve(curKey)
         }

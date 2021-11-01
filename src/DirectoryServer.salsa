@@ -77,9 +77,11 @@ behavior DirectoryServer {
         Set values = fileLocations.values();
         String curKey = "";
         String curValue = "";
-        while(keys.hasNext()){
-            curKey = keys.next();
-            curValue = values.next();
+        Iterator keyIt = keys.iterator();
+        Iterator valueIt = values.iterator();
+        while(keyIt <- hasNext()){
+            curKey = keyIt.next();
+            curValue = valueIt.next();
             if(curKey.contains(fileName)){
               temp.put(curKey, curValue);
             }
